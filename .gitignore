@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# Bicep compiled files
+# Generated ARM templates from Bicep files
+infra/**/*.json
+!infra/main.parameters.json
+
 # Distribution / packaging
 .Python
 build/

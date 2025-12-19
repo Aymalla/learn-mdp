@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "dev"
+    },
+    "devCenterName": {
+      "value": "mdp-devcenter-dev"
+    },
+    "vnetName": {
+      "value": "mdp-vnet-dev"
+    },
+    "poolName": {
+      "value": "mdp-pool-dev"
+    },
+    "organizationName": {
+      "value": "<your-azure-devops-org>"
+    },
+    "projectNames": {
+      "value": []
+    },
+    "maximumConcurrency": {
+      "value": 1
+    },
+    "vmSize": {
+      "value": "Standard_D2s_v3"
+    },
+    "imageName": {
+      "value": "ubuntu-22.04/latest"
+    }
+  }
+}
