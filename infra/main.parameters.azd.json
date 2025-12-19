@@ -9,10 +9,10 @@
       "value": "${AZURE_LOCATION}"
     },
     "organizationName": {
-      "value": "${AZURE_DEVOPS_ORG_NAME=}"
+      "value": "${AZURE_DEVOPS_ORG_NAME}"
     },
     "projectNames": {
-      "value": "${AZURE_DEVOPS_PROJECT_NAMES=[]}"
+      "value": []
     },
     "maximumConcurrency": {
       "value": "${MAXIMUM_CONCURRENCY=1}"
