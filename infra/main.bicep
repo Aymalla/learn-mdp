@@ -32,6 +32,9 @@ param agentProfile object = {
   kind: 'Stateless'
 }
 
+@description('The Dev Center project resource ID (optional)')
+param devCenterProjectResourceId string = ''
+
 // Create the Managed DevOps Pool
 resource managedDevOpsPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' = {
   name: poolName
@@ -48,7 +51,7 @@ resource managedDevOpsPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-prev
     }
     agentProfile: agentProfile
     maximumConcurrency: maximumConcurrency
-    devCenterProjectResourceId: ''
+    devCenterProjectResourceId: devCenterProjectResourceId
   }
   sku: {
     name: skuName
