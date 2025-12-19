@@ -7,9 +7,7 @@ param location string = resourceGroup().location
 param poolName string
 
 @description('The maximum number of agents in the pool')
-@minValue(1)
-@maxValue(100)
-param maximumConcurrency int = 1
+param maximumConcurrency string = '1'
 
 @description('The Azure DevOps organization name')
 param devOpsOrganizationName string
@@ -50,8 +48,8 @@ resource managedDevOpsPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-prev
       ]
     }
     agentProfile: agentProfile
-    maximumConcurrency: maximumConcurrency
-    devCenterProjectResourceId: devCenterProjectResourceId
+    maximumConcurrency: int(maximumConcurrency)
+    devCenterProjectResourceId: !empty(devCenterProjectResourceId) ? devCenterProjectResourceId : null
   }
   sku: {
     name: skuName

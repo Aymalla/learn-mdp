@@ -45,7 +45,11 @@ destroy:
 # Show deployment status
 status:
 	@echo "Deployment status:"
-	@azd env get-values || echo "No environment found. Run 'make provision' first."
+	@if azd env list 2>/dev/null | grep -q "$(AZURE_ENV_NAME)"; then \
+		azd env get-values; \
+	else \
+		echo "No environment found. Run 'make provision' first."; \
+	fi
 
 # Clean up local state
 clean:
