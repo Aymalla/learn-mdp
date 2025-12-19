@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "poolName": {
+      "value": "${AZURE_MDP_POOL_NAME=mdp-pool}"
+    },
+    "maximumConcurrency": {
+      "value": "${AZURE_MDP_MAX_CONCURRENCY=1}"
+    },
+    "devOpsOrganizationName": {
+      "value": "${AZURE_DEVOPS_ORG_NAME}"
+    },
+    "devOpsProjectNames": {
+      "value": "${AZURE_DEVOPS_PROJECT_NAMES}"
+    },
+    "skuName": {
+      "value": "${AZURE_MDP_SKU=Standard}"
+    },
+    "environmentName": {
+      "value": "${AZURE_ENV_NAME}"
+    }
+  }
+}
