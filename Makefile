@@ -1,4 +1,4 @@
-.PHONY: help init validate build deploy clean lint test azd-up azd-down show
+.PHONY: help init validate build deploy clean lint azd-up azd-down show
 
 # Default target
 help:
@@ -29,20 +29,22 @@ init:
 	@echo "Initializing Azure Developer CLI..."
 	azd init
 
-# Validate Bicep templates
+# Validate Bicep templates (packages and validates)
 validate:
 	@echo "Validating Bicep templates..."
-	@echo "Building Bicep templates to validate syntax..."
+	@echo "Building and validating Bicep templates using azd..."
 	azd package --all
 
-# Build Bicep to ARM JSON
+# Build Bicep to ARM JSON (packages templates)
 build:
 	@echo "Building Bicep templates..."
+	@echo "Packaging Bicep templates using azd..."
 	azd package --all
 
-# Lint Bicep templates
+# Lint Bicep templates (packages and lints)
 lint:
 	@echo "Linting Bicep templates..."
+	@echo "Packaging and linting Bicep templates using azd..."
 	azd package --all
 
 # Deploy using Azure Developer CLI
@@ -51,9 +53,7 @@ deploy:
 	azd up
 
 # Deploy using Azure Developer CLI (alias)
-azd-up:
-	@echo "Deploying with Azure Developer CLI..."
-	azd up
+azd-up: deploy
 
 # Delete infrastructure using Azure Developer CLI
 azd-down:
@@ -73,7 +73,3 @@ clean:
 	@echo "Cleaning generated ARM JSON files..."
 	find infra -name "*.json" -not -name "main.parameters.json" -not -name "main.parameters.azd.json" -type f -delete
 	@echo "Clean complete!"
-
-# Test - placeholder for future tests
-test:
-	@echo "No tests defined yet"
