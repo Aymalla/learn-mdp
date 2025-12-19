@@ -8,7 +8,7 @@ The infrastructure consists of three main components:
 
 1. **Dev Center**: The Azure Dev Center that manages the development infrastructure
 2. **Virtual Network (VNet)**: A dedicated VNet with a subnet delegated to Microsoft.DevOpsInfrastructure/pools
-3. **Managed DevOps Pool**: The managed pool that provides GitHub Actions or Azure Pipelines runners
+3. **Managed DevOps Pool**: The managed pool that provides Azure Pipelines runners for Azure DevOps
 
 ## Prerequisites
 

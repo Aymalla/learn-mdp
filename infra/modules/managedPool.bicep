@@ -12,12 +12,14 @@ param devCenterId string
 param subnetId string
 
 @description('The maximum number of agents in the pool')
+@minValue(1)
 param maximumConcurrency int = 1
 
 @description('The Azure DevOps organization name')
+@minLength(1)
 param organizationName string
 
-@description('The Azure DevOps project names')
+@description('The Azure DevOps project names. When left empty (default), the pool is available to all projects in the organization.')
 param projectNames array = []
 
 @description('The agent image to use')
@@ -29,7 +31,7 @@ param vmSize string = 'Standard_D2s_v3'
 @description('Tags to apply to the Managed DevOps Pool')
 param tags object = {}
 
-resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2023-12-13-preview' = {
+resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' = {
   name: poolName
   location: location
   tags: tags
@@ -47,6 +49,8 @@ resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2023-12-13-preview' =
     }
     agentProfile: {
       kind: 'Stateless'
+      // For stateless agents, resource predictions are not required.
+      // The schema requires this property, so it is intentionally left as an empty object.
       resourcePredictions: {}
     }
     fabricProfile: {

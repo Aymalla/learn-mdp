@@ -20,6 +20,7 @@ param vnetName string = 'mdp-vnet-${environmentName}'
 param poolName string = 'mdp-pool-${environmentName}'
 
 @description('The Azure DevOps organization name')
+@minLength(1)
 param organizationName string
 
 @description('The Azure DevOps project names')
@@ -32,6 +33,7 @@ param vnetAddressPrefix string = '10.0.0.0/16'
 param subnetAddressPrefix string = '10.0.0.0/24'
 
 @description('The maximum number of concurrent agents')
+@minValue(1)
 param maximumConcurrency int = 1
 
 @description('The VM size for pool agents')

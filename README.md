@@ -35,6 +35,9 @@ azd env set AZURE_DEVOPS_ORG_NAME "your-org-name"
 
 # Provision and deploy infrastructure
 azd up
+
+# Or use the Makefile
+make azd-up
 ```
 
 ### Deploy with Azure CLI
@@ -51,6 +54,33 @@ az deployment group create \
   --resource-group rg-managed-devops-pool \
   --template-file infra/main.bicep \
   --parameters infra/main.parameters.json
+
+# Or use the Makefile
+make deploy
+```
+
+### Using the Makefile
+
+A Makefile is provided for common operations:
+
+```bash
+# Show all available commands
+make help
+
+# Validate Bicep templates
+make validate
+
+# Build Bicep templates
+make build
+
+# Deploy with Azure CLI
+make deploy
+
+# Deploy with Azure Developer CLI
+make azd-up
+
+# Clean generated files
+make clean
 ```
 
 ## Documentation
