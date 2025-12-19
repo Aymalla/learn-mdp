@@ -20,11 +20,24 @@ See the [infrastructure documentation](./infra/README.md) for detailed deploymen
 
 ### Prerequisites
 
-- Azure CLI
+- [Azure Developer CLI (azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd) (recommended) or Azure CLI
 - An Azure subscription
 - Azure DevOps organization (optional)
 
-### Deploy
+### Deploy with Azure Developer CLI (Recommended)
+
+```bash
+# Initialize azd (first time only)
+azd init
+
+# Set required environment variables
+azd env set AZURE_DEVOPS_ORG_NAME "your-org-name"
+
+# Provision and deploy infrastructure
+azd up
+```
+
+### Deploy with Azure CLI
 
 ```bash
 # Login to Azure
@@ -44,6 +57,7 @@ az deployment group create \
 
 - [Infrastructure Deployment Guide](./infra/README.md)
 - [Azure Managed DevOps Pools](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues)
+- [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/)
 
 ## License
 

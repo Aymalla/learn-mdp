@@ -1,0 +1,6 @@
+name: learn-mdp
+metadata:
+  template: learn-mdp@0.0.1-beta
+infra:
+  provider: bicep
+  path: infra

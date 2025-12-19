@@ -12,6 +12,12 @@ The infrastructure consists of three main components:
 
 ## Prerequisites
 
+**Option 1: Azure Developer CLI (Recommended)**
+- Azure Developer CLI ([Install azd](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd))
+- An Azure subscription with appropriate permissions
+- An Azure DevOps organization (if using Azure DevOps)
+
+**Option 2: Azure CLI**
 - Azure CLI installed ([Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli))
 - Bicep CLI installed (comes with Azure CLI 2.20.0+)
 - An Azure subscription with appropriate permissions
@@ -21,39 +27,89 @@ The infrastructure consists of three main components:
 
 ```
 infra/
-├── main.bicep                    # Main orchestration file
-├── main.parameters.json          # Parameters file for deployment
+├── main.bicep                      # Main orchestration file
+├── main.parameters.json            # Parameters file (Azure CLI)
+├── main.parameters.azd.json        # Parameters file (Azure Developer CLI)
 ├── modules/
-│   ├── devCenter.bicep          # Dev Center module
-│   ├── vnet.bicep               # Virtual Network module
-│   └── managedPool.bicep        # Managed DevOps Pool module
-└── README.md                     # This file
+│   ├── devCenter.bicep            # Dev Center module
+│   ├── vnet.bicep                 # Virtual Network module
+│   └── managedPool.bicep          # Managed DevOps Pool module
+└── README.md                       # This file
 ```
-
-## Configuration
-
-Before deploying, update the `main.parameters.json` file with your specific values:
-
-- **environmentName**: Environment identifier (e.g., dev, test, prod)
-- **devCenterName**: Name for the Dev Center resource
-- **vnetName**: Name for the Virtual Network
-- **poolName**: Name for the Managed DevOps Pool
-- **organizationName**: Your Azure DevOps organization name
-- **projectNames**: Array of Azure DevOps project names (optional)
-- **maximumConcurrency**: Maximum number of concurrent agents
-- **vmSize**: Azure VM size for the agents
-- **imageName**: Agent image to use (default: ubuntu-22.04/latest)
 
 ## Deployment
 
-### 1. Login to Azure
+### Option 1: Deploy with Azure Developer CLI (Recommended)
+
+The Azure Developer CLI (azd) provides a streamlined deployment experience with environment management.
+
+#### 1. Initialize azd (first time only)
+
+```bash
+azd init
+```
+
+#### 2. Configure Environment Variables
+
+Set the required Azure DevOps organization name:
+
+```bash
+azd env set AZURE_DEVOPS_ORG_NAME "your-org-name"
+```
+
+Optional configuration:
+
+```bash
+# Set specific projects (default: all projects in org)
+azd env set AZURE_DEVOPS_PROJECT_NAMES '["project1","project2"]'
+
+# Set maximum concurrent agents (default: 1)
+azd env set MAXIMUM_CONCURRENCY 2
+
+# Set VM size (default: Standard_D2s_v3)
+azd env set VM_SIZE "Standard_D4s_v3"
+
+# Set agent image (default: ubuntu-22.04/latest)
+azd env set IMAGE_NAME "windows-2022/latest"
+```
+
+#### 3. Provision and Deploy
+
+```bash
+azd up
+```
+
+This single command will:
+- Create the resource group
+- Deploy all infrastructure components
+- Store deployment outputs
+
+#### 4. View Deployment
+
+```bash
+# Show environment details
+azd env get-values
+
+# Show deployment outputs
+azd show
+```
+
+#### 5. Clean Up
+
+```bash
+azd down
+```
+
+### Option 2: Deploy with Azure CLI
+
+#### 1. Login to Azure
 
 ```bash
 az login
 az account set --subscription <subscription-id>
 ```
 
-### 2. Create Resource Group
+#### 2. Create Resource Group
 
 ```bash
 az group create \
@@ -61,7 +117,21 @@ az group create \
   --location eastus
 ```
 
-### 3. Validate the Bicep Template
+#### 3. Configure Parameters
+
+Update `main.parameters.json` with your specific values:
+
+```json
+{
+  "parameters": {
+    "environmentName": { "value": "dev" },
+    "location": { "value": "eastus" },
+    "organizationName": { "value": "your-org-name" }
+  }
+}
+```
+
+#### 4. Validate the Bicep Template
 
 ```bash
 az deployment group validate \
@@ -70,7 +140,7 @@ az deployment group validate \
   --parameters infra/main.parameters.json
 ```
 
-### 4. Deploy the Infrastructure
+#### 5. Deploy the Infrastructure
 
 ```bash
 az deployment group create \
@@ -80,7 +150,7 @@ az deployment group create \
   --name mdp-deployment
 ```
 
-### 5. Verify Deployment
+#### 6. Verify Deployment
 
 ```bash
 az deployment group show \

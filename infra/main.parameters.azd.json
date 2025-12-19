@@ -3,25 +3,25 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "environmentName": {
-      "value": "dev"
+      "value": "${AZURE_ENV_NAME}"
     },
     "location": {
-      "value": "eastus"
+      "value": "${AZURE_LOCATION}"
     },
     "organizationName": {
-      "value": "<your-azure-devops-org>"
+      "value": "${AZURE_DEVOPS_ORG_NAME=}"
     },
     "projectNames": {
-      "value": []
+      "value": "${AZURE_DEVOPS_PROJECT_NAMES=[]}"
     },
     "maximumConcurrency": {
-      "value": 1
+      "value": "${MAXIMUM_CONCURRENCY=1}"
     },
     "vmSize": {
-      "value": "Standard_D2s_v3"
+      "value": "${VM_SIZE=Standard_D2s_v3}"
     },
     "imageName": {
-      "value": "ubuntu-22.04/latest"
+      "value": "${IMAGE_NAME=ubuntu-22.04/latest}"
     }
   }
 }

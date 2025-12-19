@@ -1,20 +1,23 @@
 // Main Bicep template for Managed DevOps Pool Infrastructure
 targetScope = 'resourceGroup'
 
-@description('The environment name (e.g., dev, test, prod)')
-param environmentName string = 'dev'
+@minLength(1)
+@maxLength(64)
+@description('Name of the environment that can be used as part of naming resource convention')
+param environmentName string
 
-@description('The location for all resources')
-param location string = resourceGroup().location
+@minLength(1)
+@description('Primary location for all resources')
+param location string
 
 @description('The name of the Dev Center')
-param devCenterName string
+param devCenterName string = 'mdp-devcenter-${environmentName}'
 
 @description('The name of the Virtual Network')
-param vnetName string
+param vnetName string = 'mdp-vnet-${environmentName}'
 
 @description('The name of the Managed DevOps Pool')
-param poolName string
+param poolName string = 'mdp-pool-${environmentName}'
 
 @description('The Azure DevOps organization name')
 param organizationName string
@@ -38,6 +41,7 @@ param vmSize string = 'Standard_D2s_v3'
 param imageName string = 'ubuntu-22.04/latest'
 
 var tags = {
+  'azd-env-name': environmentName
   environment: environmentName
   managedBy: 'Bicep'
   purpose: 'ManagedDevOpsPool'
