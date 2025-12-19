@@ -1,4 +1,4 @@
-.PHONY: help init validate build deploy clean lint test azd-up azd-down
+.PHONY: help init validate build deploy clean lint test azd-up azd-down what-if show
 
 # Default target
 help:
