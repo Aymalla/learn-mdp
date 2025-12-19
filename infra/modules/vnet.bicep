@@ -9,7 +9,7 @@ param location string = resourceGroup().location
 param addressPrefix string = '10.0.0.0/16'
 
 @description('The subnet name')
-param subnetName string = 'default'
+param subnetName string = 'snet-managed-pool'
 
 @description('The subnet address prefix')
 param subnetPrefix string = '10.0.0.0/24'

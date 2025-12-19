@@ -56,7 +56,9 @@ deploy:
 azd-up: deploy
 
 # Delete infrastructure using Azure Developer CLI
+# WARNING: This will permanently delete all resources without additional confirmation
 azd-down:
+	@echo "WARNING: This will permanently delete all resources and purge soft-deleted items!"
 	@echo "Deleting infrastructure with Azure Developer CLI..."
 	azd down --force --purge
 
@@ -71,5 +73,5 @@ show:
 # Clean generated files
 clean:
 	@echo "Cleaning generated ARM JSON files..."
-	find infra -name "*.json" -not -name "main.parameters.json" -not -name "main.parameters.azd.json" -type f -delete
+	@rm -f infra/main.json infra/modules/*.json
 	@echo "Clean complete!"

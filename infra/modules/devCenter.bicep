@@ -19,4 +19,6 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2023-04-01' = {
 
 output devCenterId string = devCenter.id
 output devCenterName string = devCenter.name
+// The principalId of the system-assigned managed identity
+// Can be used for assigning RBAC roles to the Dev Center
 output principalId string = devCenter.identity.principalId

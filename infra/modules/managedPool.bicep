@@ -23,9 +23,21 @@ param organizationName string
 param projectNames array = []
 
 @description('The agent image to use')
+@allowed([
+  'ubuntu-22.04/latest'
+  'ubuntu-20.04/latest'
+  'windows-2022/latest'
+  'windows-2019/latest'
+])
 param imageName string = 'ubuntu-22.04/latest'
 
 @description('The VM size for the agents')
+@allowed([
+  'Standard_D2s_v3'
+  'Standard_D4s_v3'
+  'Standard_D8s_v3'
+  'Standard_D16s_v3'
+])
 param vmSize string = 'Standard_D2s_v3'
 
 @description('Tags to apply to the Managed DevOps Pool')
@@ -60,7 +72,7 @@ resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' =
       }
       images: [
         {
-          resourceId: imageName
+          wellKnownImageName: imageName
         }
       ]
       networkProfile: {
