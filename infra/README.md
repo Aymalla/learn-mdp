@@ -60,9 +60,6 @@ azd env set AZURE_DEVOPS_ORG_NAME "your-org-name"
 Optional configuration:
 
 ```bash
-# Set specific projects (default: all projects in org)
-azd env set AZURE_DEVOPS_PROJECT_NAMES '["project1","project2"]'
-
 # Set maximum concurrent agents (default: 1)
 azd env set MAXIMUM_CONCURRENCY 2
 
@@ -71,6 +68,13 @@ azd env set VM_SIZE "Standard_D4s_v3"
 
 # Set agent image (default: ubuntu-22.04/latest)
 azd env set IMAGE_NAME "windows-2022/latest"
+```
+
+**Note**: To configure specific Azure DevOps projects (instead of all projects), edit `infra/main.parameters.azd.json` and set the `projectNames` array:
+```json
+"projectNames": {
+  "value": ["project1", "project2"]
+}
 ```
 
 #### 3. Provision and Deploy
