@@ -1,4 +1,4 @@
-.PHONY: help init validate build deploy clean lint test azd-up azd-down what-if show
+.PHONY: help init validate build deploy clean lint test azd-up azd-down show
 
 # Default target
 help:
@@ -8,20 +8,18 @@ help:
 	@echo "  validate      - Validate Bicep templates"
 	@echo "  build         - Build Bicep templates to ARM JSON"
 	@echo "  lint          - Lint Bicep templates"
-	@echo "  deploy        - Deploy infrastructure using Azure CLI"
-	@echo "  azd-up        - Deploy infrastructure using Azure Developer CLI"
+	@echo "  deploy        - Deploy infrastructure using Azure Developer CLI"
+	@echo "  azd-up        - Deploy infrastructure using Azure Developer CLI (alias for deploy)"
 	@echo "  azd-down      - Delete infrastructure using Azure Developer CLI"
+	@echo "  show          - Show environment values and deployment outputs"
 	@echo "  clean         - Remove generated files"
 	@echo ""
-	@echo "Environment variables:"
-	@echo "  RESOURCE_GROUP    - Azure resource group name (default: rg-managed-devops-pool)"
-	@echo "  LOCATION          - Azure region (default: eastus)"
-	@echo "  DEPLOYMENT_NAME   - Deployment name (default: mdp-deployment)"
+	@echo "Environment variables (set via 'azd env set'):"
+	@echo "  AZURE_ENV_NAME           - Environment name"
+	@echo "  AZURE_LOCATION           - Azure region"
+	@echo "  AZURE_DEVOPS_ORG_NAME    - Azure DevOps organization name"
 
 # Variables
-RESOURCE_GROUP ?= rg-managed-devops-pool
-LOCATION ?= eastus
-DEPLOYMENT_NAME ?= mdp-deployment
 BICEP_FILE = infra/main.bicep
 PARAMS_FILE = infra/main.parameters.json
 AZD_PARAMS_FILE = infra/main.parameters.azd.json
@@ -34,55 +32,25 @@ init:
 # Validate Bicep templates
 validate:
 	@echo "Validating Bicep templates..."
-	az bicep build --file $(BICEP_FILE)
-	az deployment group validate \
-		--resource-group $(RESOURCE_GROUP) \
-		--template-file $(BICEP_FILE) \
-		--parameters $(PARAMS_FILE) || true
+	@echo "Building Bicep templates to validate syntax..."
+	azd package --all
 
 # Build Bicep to ARM JSON
 build:
 	@echo "Building Bicep templates..."
-	az bicep build --file $(BICEP_FILE)
-	@echo "Building module templates..."
-	az bicep build --file infra/modules/devCenter.bicep
-	az bicep build --file infra/modules/vnet.bicep
-	az bicep build --file infra/modules/managedPool.bicep
+	azd package --all
 
 # Lint Bicep templates
 lint:
 	@echo "Linting Bicep templates..."
-	az bicep build --file $(BICEP_FILE)
-	az bicep build --file infra/modules/devCenter.bicep
-	az bicep build --file infra/modules/vnet.bicep
-	az bicep build --file infra/modules/managedPool.bicep
-
-# Deploy using Azure CLI
-deploy:
-	@echo "Creating resource group if it doesn't exist..."
-	az group create --name $(RESOURCE_GROUP) --location $(LOCATION)
-	@echo "Deploying infrastructure..."
-	az deployment group create \
-		--resource-group $(RESOURCE_GROUP) \
-		--template-file $(BICEP_FILE) \
-		--parameters $(PARAMS_FILE) \
-		--name $(DEPLOYMENT_NAME)
-	@echo "Deployment complete!"
-	@echo "Outputs:"
-	az deployment group show \
-		--resource-group $(RESOURCE_GROUP) \
-		--name $(DEPLOYMENT_NAME) \
-		--query properties.outputs
-
-# What-if analysis
-what-if:
-	@echo "Running what-if analysis..."
-	az deployment group what-if \
-		--resource-group $(RESOURCE_GROUP) \
-		--template-file $(BICEP_FILE) \
-		--parameters $(PARAMS_FILE)
+	azd package --all
 
 # Deploy using Azure Developer CLI
+deploy:
+	@echo "Deploying with Azure Developer CLI..."
+	azd up
+
+# Deploy using Azure Developer CLI (alias)
 azd-up:
 	@echo "Deploying with Azure Developer CLI..."
 	azd up
@@ -94,11 +62,11 @@ azd-down:
 
 # Show deployment outputs
 show:
-	@echo "Deployment outputs:"
-	az deployment group show \
-		--resource-group $(RESOURCE_GROUP) \
-		--name $(DEPLOYMENT_NAME) \
-		--query properties.outputs
+	@echo "Environment values:"
+	azd env get-values
+	@echo ""
+	@echo "Deployment details:"
+	azd show
 
 # Clean generated files
 clean:

@@ -39,7 +39,7 @@ infra/
 
 ## Deployment
 
-### Option 1: Deploy with Azure Developer CLI (Recommended)
+### Using Azure Developer CLI (Recommended)
 
 The Azure Developer CLI (azd) provides a streamlined deployment experience with environment management.
 
@@ -104,74 +104,47 @@ azd show
 azd down
 ```
 
-### Option 2: Deploy with Azure CLI
+### Using the Makefile
 
-#### 1. Login to Azure
+A Makefile is provided for streamlined operations:
 
 ```bash
+# Show all available commands
+make help
+
+# Initialize azd environment
+make init
+
+# Validate templates
+make validate
+
+# Deploy infrastructure
+make deploy
+
+# Show outputs
+make show
+
+# Delete infrastructure
+make azd-down
+```
+
+### Alternative: Deploy with Azure CLI
+
+If you prefer traditional Azure CLI deployment, you can use `main.parameters.json`:
+
+```bash
+# Login to Azure
 az login
-az account set --subscription <subscription-id>
-```
 
-#### 2. Create Resource Group
+# Create resource group
+az group create --name rg-managed-devops-pool --location eastus
 
-```bash
-az group create \
-  --name rg-managed-devops-pool \
-  --location eastus
-```
-
-#### 3. Configure Parameters
-
-Update `main.parameters.json` with your specific values:
-
-```json
-{
-  "parameters": {
-    "environmentName": { "value": "dev" },
-    "location": { "value": "eastus" },
-    "organizationName": { "value": "your-org-name" }
-  }
-}
-```
-
-#### 4. Validate the Bicep Template
-
-```bash
-az deployment group validate \
-  --resource-group rg-managed-devops-pool \
-  --template-file infra/main.bicep \
-  --parameters infra/main.parameters.json
-```
-
-#### 5. Deploy the Infrastructure
-
-```bash
+# Deploy infrastructure
 az deployment group create \
   --resource-group rg-managed-devops-pool \
   --template-file infra/main.bicep \
   --parameters infra/main.parameters.json \
   --name mdp-deployment
-```
-
-#### 6. Verify Deployment
-
-```bash
-az deployment group show \
-  --resource-group rg-managed-devops-pool \
-  --name mdp-deployment \
-  --query properties.outputs
-```
-
-## What-If Analysis
-
-Before deploying, you can preview the changes:
-
-```bash
-az deployment group what-if \
-  --resource-group rg-managed-devops-pool \
-  --template-file infra/main.bicep \
-  --parameters infra/main.parameters.json
 ```
 
 ## Outputs
@@ -211,7 +184,16 @@ To use a custom VNet address space, modify these parameters:
 
 ## Clean Up
 
-To delete all resources:
+To delete all resources using Azure Developer CLI:
+
+```bash
+azd down --force --purge
+
+# Or use the Makefile
+make azd-down
+```
+
+Alternatively, using Azure CLI:
 
 ```bash
 az group delete \
@@ -235,6 +217,14 @@ az group delete \
 
 ### Enable Debug Logging
 
+With Azure Developer CLI:
+
+```bash
+azd up --debug
+```
+
+With Azure CLI:
+
 ```bash
 az deployment group create \
   --resource-group rg-managed-devops-pool \
@@ -247,7 +237,7 @@ az deployment group create \
 
 When making changes to the infrastructure:
 
-1. Test changes using `az deployment group validate`
-2. Use `az deployment group what-if` to preview changes
+1. Test changes using `make validate`
+2. Preview changes with `azd up --preview`
 3. Update documentation if adding new parameters or resources
 4. Follow Bicep best practices and linting rules

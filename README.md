@@ -20,11 +20,11 @@ See the [infrastructure documentation](./infra/README.md) for detailed deploymen
 
 ### Prerequisites
 
-- [Azure Developer CLI (azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd) (recommended) or Azure CLI
+- [Azure Developer CLI (azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd)
 - An Azure subscription
 - Azure DevOps organization (optional)
 
-### Deploy with Azure Developer CLI (Recommended)
+### Deploy with Azure Developer CLI
 
 ```bash
 # Initialize azd (first time only)
@@ -37,31 +37,12 @@ azd env set AZURE_DEVOPS_ORG_NAME "your-org-name"
 azd up
 
 # Or use the Makefile
-make azd-up
-```
-
-### Deploy with Azure CLI
-
-```bash
-# Login to Azure
-az login
-
-# Create resource group
-az group create --name rg-managed-devops-pool --location eastus
-
-# Deploy infrastructure
-az deployment group create \
-  --resource-group rg-managed-devops-pool \
-  --template-file infra/main.bicep \
-  --parameters infra/main.parameters.json
-
-# Or use the Makefile
 make deploy
 ```
 
 ### Using the Makefile
 
-A Makefile is provided for common operations:
+A Makefile is provided for common operations using Azure Developer CLI:
 
 ```bash
 # Show all available commands
@@ -73,14 +54,17 @@ make validate
 # Build Bicep templates
 make build
 
-# Deploy with Azure CLI
+# Deploy infrastructure
 make deploy
 
-# Deploy with Azure Developer CLI
-make azd-up
+# Show environment values and outputs
+make show
 
 # Clean generated files
 make clean
+
+# Delete infrastructure
+make azd-down
 ```
 
 ## Documentation
