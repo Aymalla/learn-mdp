@@ -23,4 +23,4 @@ help: ## Show this help message
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 trigger-mdp-test-workflows:
-	./scripts/mdp-run-workflow-batch.sh "mdp-test-telemetry.yml" 50
+	./scripts/mdp-run-workflow-batch.sh "mdp-test.yml" 50
