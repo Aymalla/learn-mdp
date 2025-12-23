@@ -1,23 +1,30 @@
-.PHONY: help init validate build deploy clean lint azd-up azd-down show
+.PHONY: help init validate build deploy clean lint azd-up azd-down show trigger-mdp-test-workflows 
+
+
+# Load environment file if exists
+ENV_FILE := .env
+ifeq ($(filter $(MAKECMDGOALS),config clean),)
+	ifneq ($(strip $(wildcard $(ENV_FILE))),)
+		ifneq ($(MAKECMDGOALS),config)
+			include $(ENV_FILE)
+			export
+		endif
+	endif
+endif
+
+# Load azd environment variables if azd is installed and initialized
+ifneq ($(shell command -v azd 2> /dev/null),)
+	AZD_VALUES := $(shell azd env get-values --output json | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]')
+	$(foreach kv,$(AZD_VALUES),$(eval export $(kv)))
+endif
 
 # Default target
-help:
-	@echo "Available targets:"
-	@echo "  help          - Show this help message"
-	@echo "  init          - Initialize Azure Developer CLI environment"
-	@echo "  validate      - Validate Bicep templates"
-	@echo "  build         - Build Bicep templates to ARM JSON"
-	@echo "  lint          - Lint Bicep templates"
-	@echo "  deploy        - Deploy infrastructure using Azure Developer CLI"
-	@echo "  azd-up        - Deploy infrastructure using Azure Developer CLI (alias for deploy)"
-	@echo "  azd-down      - Delete infrastructure using Azure Developer CLI"
-	@echo "  show          - Show environment values and deployment outputs"
-	@echo "  clean         - Remove generated files"
-	@echo ""
-	@echo "Environment variables (set via 'azd env set'):"
-	@echo "  AZURE_ENV_NAME           - Environment name"
-	@echo "  AZURE_LOCATION           - Azure region"
-	@echo "  AZURE_DEVOPS_ORG_NAME    - Azure DevOps organization name"
+help: ## Show this help message
+	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+trigger-mdp-test-workflows:
+	./scripts/mdp-run-workflow-batch.sh "mdp-test.yml" 50
+
 
 # Variables
 BICEP_FILE = infra/main.bicep
