@@ -38,10 +38,6 @@ infra/
 │   └── managedPool.bicep          # Managed DevOps Pool module
 └── README.md                       # This file
 ```
-│   ├── vnet.bicep                 # Virtual Network module
-│   └── managedPool.bicep          # Managed DevOps Pool module
-└── README.md                       # This file
-```
 
 ## Deployment
 
