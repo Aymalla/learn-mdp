@@ -13,6 +13,9 @@ param location string
 @description('The name of the Dev Center')
 param devCenterName string = 'mdp-devcenter-${environmentName}'
 
+@description('The name of the Dev Center Project')
+param devCenterProjectName string = 'mdp-project-${environmentName}'
+
 @description('The name of the Virtual Network')
 param vnetName string = 'mdp-vnet-${environmentName}'
 
@@ -71,13 +74,24 @@ module devCenter 'modules/devCenter.bicep' = {
   }
 }
 
+// Deploy Dev Center Project
+module devCenterProject 'modules/devCenterProject.bicep' = {
+  name: 'devcenterproject-deployment'
+  params: {
+    projectName: devCenterProjectName
+    location: location
+    devCenterId: devCenter.outputs.devCenterId
+    tags: tags
+  }
+}
+
 // Deploy Managed DevOps Pool
 module managedPool 'modules/managedPool.bicep' = {
   name: 'managedpool-deployment'
   params: {
     poolName: poolName
     location: location
-    devCenterId: devCenter.outputs.devCenterId
+    devCenterId: devCenterProject.outputs.projectId
     subnetId: vnet.outputs.subnetId
     organizationName: organizationName
     projectNames: projectNames
@@ -91,6 +105,8 @@ module managedPool 'modules/managedPool.bicep' = {
 // Outputs
 output devCenterId string = devCenter.outputs.devCenterId
 output devCenterName string = devCenter.outputs.devCenterName
+output devCenterProjectId string = devCenterProject.outputs.projectId
+output devCenterProjectName string = devCenterProject.outputs.projectName
 output vnetId string = vnet.outputs.vnetId
 output vnetName string = vnet.outputs.vnetName
 output subnetId string = vnet.outputs.subnetId

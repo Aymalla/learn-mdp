@@ -11,6 +11,7 @@ This repository contains Infrastructure as Code (IaC) using Azure Bicep to deplo
 The infrastructure setup includes:
 
 - **Dev Center**: Azure Dev Center for managing development infrastructure
+- **Dev Center Project**: Project configuration within the Dev Center
 - **Virtual Network**: Dedicated VNet with subnet delegation for managed pools
 - **Managed DevOps Pool**: Scalable pool of build agents for CI/CD pipelines
 

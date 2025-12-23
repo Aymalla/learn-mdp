@@ -5,7 +5,7 @@ param poolName string
 @description('The location for the Managed DevOps Pool')
 param location string = resourceGroup().location
 
-@description('The Dev Center resource ID')
+@description('The Dev Center Project resource ID')
 param devCenterId string
 
 @description('The subnet resource ID for the pool')

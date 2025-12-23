@@ -4,11 +4,12 @@ This directory contains the Infrastructure as Code (IaC) using Azure Bicep to de
 
 ## Architecture
 
-The infrastructure consists of three main components:
+The infrastructure consists of four main components:
 
 1. **Dev Center**: The Azure Dev Center that manages the development infrastructure
-2. **Virtual Network (VNet)**: A dedicated VNet with a subnet delegated to Microsoft.DevOpsInfrastructure/pools
-3. **Managed DevOps Pool**: The managed pool that provides Azure Pipelines runners for Azure DevOps
+2. **Dev Center Project**: A project within the Dev Center that provides the configuration for the Managed DevOps Pool
+3. **Virtual Network (VNet)**: A dedicated VNet with a subnet delegated to Microsoft.DevOpsInfrastructure/pools
+4. **Managed DevOps Pool**: The managed pool that provides Azure Pipelines runners for Azure DevOps
 
 ## Prerequisites
 
@@ -32,6 +33,11 @@ infra/
 ├── main.parameters.azd.json        # Parameters file (Azure Developer CLI)
 ├── modules/
 │   ├── devCenter.bicep            # Dev Center module
+│   ├── devCenterProject.bicep     # Dev Center Project module
+│   ├── vnet.bicep                 # Virtual Network module
+│   └── managedPool.bicep          # Managed DevOps Pool module
+└── README.md                       # This file
+```
 │   ├── vnet.bicep                 # Virtual Network module
 │   └── managedPool.bicep          # Managed DevOps Pool module
 └── README.md                       # This file
