@@ -1,13 +1,14 @@
 #!/bin/bash
 set -e
 
+ref=${3:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "main")}
 
-workflow_name=$1
-num_workflows=$2
+batch_id=$(date +%s)
 
+echo "Starting batch ID: $batch_id"
 for i in $(seq 1 $num_workflows); do
   echo "Starting workflow run$i"
-  gh workflow run "$workflow_name" --ref aym/fix-scenario-tests 
+  gh workflow run "$workflow_name" --ref "$ref"
 done
 
 sleep 3
