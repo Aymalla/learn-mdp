@@ -4,10 +4,11 @@
 	"name": "Azure MDP Dev Environment",
 	"image": "mcr.microsoft.com/devcontainers/python:3.13",
 	"features": {
-        
-        "ghcr.io/devcontainers/features/docker-in-docker": {},
-        "ghcr.io/devcontainers/features/azure-cli": {},
-        "ghcr.io/azure/azure-dev/azd": {},
+		"ghcr.io/devcontainers/features/docker-in-docker": {
+			"moby": false
+		},
+		"ghcr.io/devcontainers/features/azure-cli": {},
+		"ghcr.io/azure/azure-dev/azd": {},
 		"ghcr.io/devcontainers/features/github-cli": {}
 	},
 	"containerEnv": {
@@ -15,6 +16,9 @@
 		"AZCOPY_AUTO_LOGIN_TYPE": "AZCLI", // use Azure CLI login for azcopy auth
 		"AZURE_STORAGE_AUTH_MODE": "login" // use Entra ID auth for Azure Storage
 	},
+	"mounts": [
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.azure,target=/home/vscode/.azure,type=bind,consistency=cached"
+	],
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -29,7 +33,7 @@
 				"vitest.explorer"
 			]
 		}
-	},
+	}
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.
