@@ -6,7 +6,7 @@ param poolName string
 param location string = resourceGroup().location
 
 @description('The Dev Center Project resource ID')
-param devCenterId string
+param devCenterProjectResourceId string
 
 @description('The subnet resource ID for the pool')
 param subnetId string
@@ -15,29 +15,17 @@ param subnetId string
 @minValue(1)
 param maximumConcurrency int = 1
 
-@description('The Azure DevOps organization name')
+@description('The Azure DevOps organization URL')
 @minLength(1)
-param organizationName string
+param organizationUrl string = 'https://github.com/orgs/aymalla-org'
 
 @description('The Azure DevOps project names. When left empty (default), the pool is available to all projects in the organization.')
-param projectNames array = []
+param repositories array = ['learn-mdp']
 
 @description('The agent image to use')
-@allowed([
-  'ubuntu-22.04/latest'
-  'ubuntu-20.04/latest'
-  'windows-2022/latest'
-  'windows-2019/latest'
-])
 param imageName string = 'ubuntu-22.04/latest'
 
 @description('The VM size for the agents')
-@allowed([
-  'Standard_D2s_v3'
-  'Standard_D4s_v3'
-  'Standard_D8s_v3'
-  'Standard_D16s_v3'
-])
 param vmSize string = 'Standard_D2s_v3'
 
 @description('Tags to apply to the Managed DevOps Pool')
@@ -48,14 +36,14 @@ resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' =
   location: location
   tags: tags
   properties: {
-    devCenterProjectResourceId: devCenterId
+    devCenterProjectResourceId: devCenterProjectResourceId
     maximumConcurrency: maximumConcurrency
     organizationProfile: {
-      kind: 'AzureDevOps'
+      kind: 'GitHub'
       organizations: [
         {
-          url: 'https://dev.azure.com/${organizationName}'
-          projects: projectNames
+          url: organizationUrl
+          repositories: repositories
         }
       ]
     }
