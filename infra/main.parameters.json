@@ -8,11 +8,11 @@
     "location": {
       "value": "eastus"
     },
-    "organizationName": {
-      "value": "<your-azure-devops-org>"
+    "organizationUrl": {
+      "value": "${GITHUB_ORG_URL}"
     },
-    "projectNames": {
-      "value": []
+    "repositories": {
+      "value": ["${GITHUB_REPOSITORY_NAME}"]
     },
     "maximumConcurrency": {
       "value": 1

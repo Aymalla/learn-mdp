@@ -24,10 +24,10 @@ param poolName string = 'mdp-pool-${environmentName}'
 
 @description('The Azure DevOps organization name')
 @minLength(1)
-param organizationName string
+param organizationUrl string
 
 @description('The Azure DevOps project names')
-param projectNames array = []
+param repositories array = []
 
 @description('The virtual network address prefix')
 param vnetAddressPrefix string = '10.0.0.0/16'
@@ -91,10 +91,10 @@ module managedPool 'modules/managedPool.bicep' = {
   params: {
     poolName: poolName
     location: location
-    devCenterId: devCenterProject.outputs.projectId
+    devCenterProjectResourceId: devCenterProject.outputs.projectId
     subnetId: vnet.outputs.subnetId
-    organizationName: organizationName
-    projectNames: projectNames
+    organizationUrl: organizationUrl
+    repositories: repositories
     maximumConcurrency: maximumConcurrency
     vmSize: vmSize
     imageName: imageName

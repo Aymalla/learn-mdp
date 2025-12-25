@@ -32,7 +32,8 @@ See the [infrastructure documentation](./infra/README.md) for detailed deploymen
 azd init
 
 # Set required environment variables
-azd env set AZURE_DEVOPS_ORG_NAME "your-org-name"
+azd env set GITHUB_ORG_URL "your-org-name"
+azd env set GITHUB_REPOSITORY_NAME "your-repo-name"
 
 # Provision and deploy infrastructure
 azd up

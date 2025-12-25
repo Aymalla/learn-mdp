@@ -8,11 +8,11 @@
     "location": {
       "value": "${AZURE_LOCATION}"
     },
-    "organizationName": {
-      "value": "${AZURE_DEVOPS_ORG_NAME}"
+    "organizationUrl": {
+      "value": "${GITHUB_ORG_URL}"
     },
-    "projectNames": {
-      "value": []
+    "repositories": {
+      "value": ["${GITHUB_REPOSITORY_NAME}"]
     },
     "maximumConcurrency": {
       "value": "${MAXIMUM_CONCURRENCY=1}"
