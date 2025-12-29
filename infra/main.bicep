@@ -38,13 +38,13 @@ param subnetAddressPrefix string = '10.0.0.0/24'
 
 @description('The maximum number of concurrent agents')
 @minValue(1)
-param maximumConcurrency int = 1
+param maximumConcurrency int
 
 @description('The VM size for pool agents')
-param vmSize string = 'Standard_D4ads_v5'
+param vmSize string
 
 @description('The agent image to use')
-param imageName string = 'ubuntu-latest'
+param imageName string
 
 @description('DevOps Infrastructure Service Principal Object ID')
 param devOpsInfrastructureObjectId string

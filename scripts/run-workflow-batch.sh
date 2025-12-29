@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e
 
-ref=${3:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "main")}
-
+workflow_name=${1:-"ci.yml"}
+num_workflows=${2:-5}
 batch_id=$(date +%s)
+ref=${3:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "main")}
 
 echo "Starting batch ID: $batch_id"
 for i in $(seq 1 $num_workflows); do
