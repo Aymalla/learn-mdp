@@ -11,26 +11,27 @@ param environmentName string
 param location string
 
 @description('The name of the Dev Center')
-param devCenterName string = 'mdp-devcenter-${environmentName}'
-
-@description('The name of the Dev Center Project')
-param devCenterProjectName string = 'mdp-project-${environmentName}'
+param devCenterName string = '${environmentName}-mdp-devcenter'
 
 @description('The name of the Virtual Network')
-param vnetName string = 'mdp-vnet-${environmentName}'
+param vnetName string = '${environmentName}-mdp-vnet'
 
 @description('The name of the Managed DevOps Pool')
-param poolName string = 'mdp-pool-${environmentName}'
+param poolName string = '${environmentName}-mdp-pool'
 
 @description('The Azure DevOps organization name')
 @minLength(1)
 param organizationUrl string
 
 @description('The Azure DevOps project names')
-param repositories array = []
+@minLength(1)
+param repositories array
 
 @description('The virtual network address prefix')
 param vnetAddressPrefix string = '10.0.0.0/16'
+
+@description('The subnet name')
+param subnetName string = 'snet-managed-pool'
 
 @description('The subnet address prefix')
 param subnetAddressPrefix string = '10.0.0.0/24'
@@ -40,10 +41,13 @@ param subnetAddressPrefix string = '10.0.0.0/24'
 param maximumConcurrency int = 1
 
 @description('The VM size for pool agents')
-param vmSize string = 'Standard_D2s_v3'
+param vmSize string = 'Standard_D4ads_v5'
 
 @description('The agent image to use')
-param imageName string = 'ubuntu-22.04/latest'
+param imageName string = 'ubuntu-latest'
+
+@description('DevOps Infrastructure Service Principal Object ID')
+param devOpsInfrastructureObjectId string
 
 var tags = {
   'azd-env-name': environmentName
@@ -57,10 +61,12 @@ module vnet 'modules/vnet.bicep' = {
   name: 'vnet-deployment'
   params: {
     vnetName: vnetName
+    subnetName: subnetName
     location: location
     addressPrefix: vnetAddressPrefix
     subnetPrefix: subnetAddressPrefix
     tags: tags
+    devOpsInfrastructureObjectId: devOpsInfrastructureObjectId
   }
 }
 
@@ -74,24 +80,13 @@ module devCenter 'modules/devCenter.bicep' = {
   }
 }
 
-// Deploy Dev Center Project
-module devCenterProject 'modules/devCenterProject.bicep' = {
-  name: 'devcenterproject-deployment'
-  params: {
-    projectName: devCenterProjectName
-    location: location
-    devCenterId: devCenter.outputs.devCenterId
-    tags: tags
-  }
-}
-
 // Deploy Managed DevOps Pool
 module managedPool 'modules/managedPool.bicep' = {
   name: 'managedpool-deployment'
   params: {
     poolName: poolName
     location: location
-    devCenterProjectResourceId: devCenterProject.outputs.projectId
+    devCenterProjectResourceId: devCenter.outputs.projectId
     subnetId: vnet.outputs.subnetId
     organizationUrl: organizationUrl
     repositories: repositories
@@ -105,8 +100,8 @@ module managedPool 'modules/managedPool.bicep' = {
 // Outputs
 output devCenterId string = devCenter.outputs.devCenterId
 output devCenterName string = devCenter.outputs.devCenterName
-output devCenterProjectId string = devCenterProject.outputs.projectId
-output devCenterProjectName string = devCenterProject.outputs.projectName
+output devCenterProjectId string = devCenter.outputs.projectId
+output devCenterProjectName string = devCenter.outputs.projectName
 output vnetId string = vnet.outputs.vnetId
 output vnetName string = vnet.outputs.vnetName
 output subnetId string = vnet.outputs.subnetId

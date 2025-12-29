@@ -68,8 +68,8 @@ azd env set MAXIMUM_CONCURRENCY 2
 # Set VM size (default: Standard_D2s_v3)
 azd env set VM_SIZE "Standard_D4s_v3"
 
-# Set agent image (default: ubuntu-22.04/latest)
-azd env set IMAGE_NAME "windows-2022/latest"
+# Set agent image (default: ubuntu-latest)
+azd env set IMAGE_NAME "ubuntu-latest"
 ```
 
 **Note**: To configure specific Azure DevOps projects (instead of all projects), edit `infra/main.parameters.azd.json` and set the `projectNames` array:
@@ -100,12 +100,6 @@ azd env get-values
 azd show
 ```
 
-#### 5. Clean Up
-
-```bash
-azd down
-```
-
 ### Using the Makefile
 
 A Makefile is provided for streamlined operations:
@@ -114,20 +108,6 @@ A Makefile is provided for streamlined operations:
 # Show all available commands
 make help
 
-# Initialize azd environment
-make init
-
-# Validate templates
-make validate
-
-# Deploy infrastructure
-make deploy
-
-# Show outputs
-make show
-
-# Delete infrastructure
-make azd-down
 ```
 
 ### Alternative: Deploy with Azure CLI
@@ -163,6 +143,10 @@ The deployment provides the following outputs:
 
 ## Customization
 
+### Supported Azure Regions
+
+- Available regions for resource type 'Microsoft.DevCenter/devcenters': [`australiaeast`, `brazilsouth`, `canadacentral`, `centralus`, `francecentral`, `polandcentral`, `spaincentral`, `uaenorth`, `westeurope`, `germanywestcentral`, `italynorth`, `japaneast`, `japanwest`, `uksouth`, `eastus`, `eastus2`, `southafricanorth`, `southcentralus`, `southeastasia`, `switzerlandnorth`, `swedencentral`, `westus2`, `westus3`, `centralindia`, `eastasia`, `northeurope`, `koreacentral`]
+
 ### Changing VM Size
 
 Modify the `vmSize` parameter in `main.parameters.json`. Common sizes:
@@ -170,13 +154,11 @@ Modify the `vmSize` parameter in `main.parameters.json`. Common sizes:
 - `Standard_D4s_v3` (4 vCPUs, 16 GB RAM)
 - `Standard_D8s_v3` (8 vCPUs, 32 GB RAM)
 
-### Changing Agent Image
+### Agent Image
 
-Supported images:
-- `ubuntu-22.04/latest`
-- `ubuntu-20.04/latest`
-- `windows-2022/latest`
-- `windows-2019/latest`
+Change the `imageName` parameter in `main.parameters.json` to specify the desired agent image.
+
+Supported images:[`windows-2019`, `windows-2022`, `windows-2025`, `ubuntu-20.04`, `ubuntu-22.04`, `ubuntu-24.04`]
 
 ### Network Configuration
 

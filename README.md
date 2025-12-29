@@ -34,6 +34,7 @@ azd init
 # Set required environment variables
 azd env set GITHUB_ORG_URL "your-org-name"
 azd env set GITHUB_REPOSITORY_NAME "your-repo-name"
+azd env set DEVOPSINFRASTRUCTURE_PRINCIPLE_ID "your-service-principal-id"
 
 # Provision and deploy infrastructure
 azd up
@@ -49,30 +50,12 @@ A Makefile is provided for common operations using Azure Developer CLI:
 ```bash
 # Show all available commands
 make help
-
-# Validate Bicep templates
-make validate
-
-# Build Bicep templates
-make build
-
-# Deploy infrastructure
-make deploy
-
-# Show environment values and outputs
-make show
-
-# Clean generated files
-make clean
-
-# Delete infrastructure
-make azd-down
 ```
 
 ## Documentation
 
 - [Infrastructure Deployment Guide](./infra/README.md)
-- [Azure Managed DevOps Pools](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues)
+- [Azure Managed DevOps Pools](https://learn.microsoft.com/en-us/azure/devops/managed-devops-pools/overview?view=azure-devops)
 - [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/)
 
 ## License

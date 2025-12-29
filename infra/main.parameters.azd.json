@@ -21,7 +21,10 @@
       "value": "${VM_SIZE=Standard_D2s_v3}"
     },
     "imageName": {
-      "value": "${IMAGE_NAME=ubuntu-22.04/latest}"
+      "value": "${IMAGE_NAME=ubuntu-latest}"
+    },
+    "devOpsInfrastructureObjectId": {
+      "value": "${DEVOPSINFRASTRUCTURE_PRINCIPLE_ID}"
     }
   }
 }

@@ -13,7 +13,7 @@ param subnetId string
 
 @description('The maximum number of agents in the pool')
 @minValue(1)
-param maximumConcurrency int = 1
+param maximumConcurrency int = 10
 
 @description('The Azure DevOps organization URL')
 @minLength(1)
@@ -23,13 +23,19 @@ param organizationUrl string = 'https://github.com/orgs/aymalla-org'
 param repositories array = ['learn-mdp']
 
 @description('The agent image to use')
-param imageName string = 'ubuntu-22.04/latest'
+param imageName string = 'ubuntu-24.04'
 
 @description('The VM size for the agents')
 param vmSize string = 'Standard_D2s_v3'
 
 @description('Tags to apply to the Managed DevOps Pool')
 param tags object = {}
+
+@description('Resource predictions configuration for the pool agents (optional)')
+param resourcePredictions object?
+
+@description('Resource predictions profile for the pool agents (optional)')
+param resourcePredictionsProfile object?
 
 resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' = {
   name: poolName
@@ -48,10 +54,11 @@ resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' =
       ]
     }
     agentProfile: {
-      kind: 'Stateless'
-      // For stateless agents, resource predictions are not required.
-      // The schema requires this property, so it is intentionally left as an empty object.
-      resourcePredictions: {}
+      maxAgentLifetime: '0.08:00:00'
+      gracePeriodTimeSpan: '0.00:05:00'
+      kind: 'Stateful'
+      resourcePredictionsProfile: resourcePredictionsProfile
+      resourcePredictions: resourcePredictions
     }
     fabricProfile: {
       kind: 'Vmss'
