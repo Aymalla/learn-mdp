@@ -24,7 +24,7 @@ help: ## Show this help message
 
 trigger-test-workflow-batch: ## Trigger MDP test workflows in batch
 	@echo "Triggering MDP test workflows in batch..."
-	./scripts/run-workflow-batch.sh "mdp-test.yml" 50
+	./scripts/run-workflow-batch.sh "mdp-test.yml" 20
 
 init: ## Initialize Azure Developer CLI
 	@echo "Initializing Azure Developer CLI..."

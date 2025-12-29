@@ -13,7 +13,7 @@ param subnetId string
 
 @description('The maximum number of agents in the pool')
 @minValue(1)
-param maximumConcurrency int = 10
+param maximumConcurrency int = 20
 
 @description('The Azure DevOps organization URL')
 @minLength(1)
@@ -23,10 +23,10 @@ param organizationUrl string = 'https://github.com/orgs/aymalla-org'
 param repositories array = ['learn-mdp']
 
 @description('The agent image to use')
-param imageName string = 'ubuntu-24.04'
+param imageName string
 
 @description('The VM size for the agents')
-param vmSize string = 'Standard_D2s_v3'
+param vmSize string
 
 @description('Tags to apply to the Managed DevOps Pool')
 param tags object = {}
