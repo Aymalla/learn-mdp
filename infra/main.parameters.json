@@ -17,7 +17,7 @@
       ]
     },
     "maximumConcurrency": {
-      "value": 1
+      "value": 20
     },
     "vmSize": {
       "value": "Standard_B2s"

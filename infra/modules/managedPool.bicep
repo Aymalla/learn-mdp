@@ -13,14 +13,14 @@ param subnetId string
 
 @description('The maximum number of agents in the pool')
 @minValue(1)
-param maximumConcurrency int = 20
+param maximumConcurrency int
 
 @description('The Azure DevOps organization URL')
 @minLength(1)
-param organizationUrl string = 'https://github.com/orgs/aymalla-org'
+param organizationUrl string
 
 @description('The Azure DevOps project names. When left empty (default), the pool is available to all projects in the organization.')
-param repositories array = ['learn-mdp']
+param repositories array
 
 @description('The agent image to use')
 param imageName string
@@ -35,7 +35,10 @@ param tags object = {}
 param resourcePredictions object?
 
 @description('Resource predictions profile for the pool agents (optional)')
-param resourcePredictionsProfile object?
+param resourcePredictionsProfile object = {
+  predictionPreference: 'Balanced'
+  kind: 'Automatic'
+}
 
 resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' = {
   name: poolName
