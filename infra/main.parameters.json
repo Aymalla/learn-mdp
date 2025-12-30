@@ -16,11 +16,17 @@
         "${GITHUB_REPOSITORY_NAME}"
       ]
     },
-    "maximumConcurrency": {
-      "value": 20
+    "vnetAddressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "subnetAddressPrefix": {
+      "value": "10.0.0.0/24"
+    },
+    "poolMaximumSize": {
+      "value": 30
     },
     "vmSize": {
-      "value": "Standard_B2s"
+      "value": "Standard_D4ads_v5"
     },
     "imageName": {
       "value": "ubuntu-24.04"

@@ -22,9 +22,9 @@ endif
 help: ## Show this help message
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-trigger-test-workflow-batch: ## Trigger MDP test workflows in batch
+trigger-workflow-batch: ## Trigger MDP test workflows in batch
 	@echo "Triggering MDP test workflows in batch..."
-	./scripts/run-workflow-batch.sh "mdp-test.yml" 20
+	./scripts/run-workflow-batch.sh "mdp-test.yml" 100
 
 init: ## Initialize Azure Developer CLI
 	@echo "Initializing Azure Developer CLI..."

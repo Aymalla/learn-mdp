@@ -28,17 +28,17 @@ param organizationUrl string
 param repositories array
 
 @description('The virtual network address prefix')
-param vnetAddressPrefix string = '10.0.0.0/16'
+param vnetAddressPrefix string
 
 @description('The subnet name')
 param subnetName string = 'snet-managed-pool'
 
 @description('The subnet address prefix')
-param subnetAddressPrefix string = '10.0.0.0/24'
+param subnetAddressPrefix string
 
 @description('The maximum number of concurrent agents')
 @minValue(1)
-param maximumConcurrency int
+param poolMaximumSize int
 
 @description('The VM size for pool agents')
 param vmSize string
@@ -90,7 +90,7 @@ module managedPool 'modules/managedPool.bicep' = {
     subnetId: vnet.outputs.subnetId
     organizationUrl: organizationUrl
     repositories: repositories
-    maximumConcurrency: maximumConcurrency
+    maximumConcurrency: poolMaximumSize
     vmSize: vmSize
     imageName: imageName
     tags: tags
