@@ -26,6 +26,12 @@ trigger-workflow-batch: ## Trigger MDP test workflows in batch
 	@echo "Triggering MDP test workflows in batch..."
 	./scripts/run-workflow-batch.sh "mdp-test.yml" 100
 
+cancel-queued-workflows: ## Cancel MDP test workflows in batch
+	@echo "Cancelling MDP test workflows in batch..."
+	gh run list --limit 1000 --json databaseId,status,name,workflowName \
+	  -q '.[] | select(.status=="queued") | .databaseId' \
+	  | xargs -r -n1 gh run cancel
+
 init: ## Initialize Azure Developer CLI
 	@echo "Initializing Azure Developer CLI..."
 	azd init
