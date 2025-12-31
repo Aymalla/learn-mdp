@@ -28,7 +28,7 @@ jobs:
 
   medium-job:
     runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=medium-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
-    name: Medium Job (~20s)
+    name: Medium Job (~30s)
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -41,7 +41,7 @@ jobs:
       - name: Processing step
         run: |
           echo "Processing..."
-          sleep 10
+          sleep 15
 
       - name: Cleanup step
         run: |
@@ -51,7 +51,7 @@ jobs:
 
   long-job:
     runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=long-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
-    name: Long Job (~40s)
+    name: Long Job (~60s)
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -59,17 +59,17 @@ jobs:
       - name: Initialize
         run: |
           echo "Initializing long job..."
-          sleep 5
+          sleep 10
 
       - name: Build phase
         run: |
           echo "Building..."
-          sleep 15
+          sleep 20
 
       - name: Test phase
         run: |
           echo "Testing..."
-          sleep 15
+          sleep 20
 
       - name: Deploy phase
         run: |
@@ -130,7 +130,7 @@ jobs:
           echo "| Job | Expected Duration |" >> $GITHUB_STEP_SUMMARY
           echo "|-----|-------------------|" >> $GITHUB_STEP_SUMMARY
           echo "| Quick Job | ~5s |" >> $GITHUB_STEP_SUMMARY
-          echo "| Medium Job | ~20s |" >> $GITHUB_STEP_SUMMARY
-          echo "| Long Job | ~40s |" >> $GITHUB_STEP_SUMMARY
+          echo "| Medium Job | ~30s |" >> $GITHUB_STEP_SUMMARY
+          echo "| Long Job | ~60s |" >> $GITHUB_STEP_SUMMARY
           echo "| Parallel Jobs | 5-15s each |" >> $GITHUB_STEP_SUMMARY
           echo "| Skipped Job | N/A (always skipped) |" >> $GITHUB_STEP_SUMMARY
