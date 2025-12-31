@@ -12,10 +12,13 @@ ifeq ($(filter $(MAKECMDGOALS),config clean),)
 	endif
 endif
 
-# Load azd environment variables if azd is installed and initialized
+# Load azd environment variables if azd is installed and an environment is configured
 ifneq ($(shell command -v azd 2> /dev/null),)
-AZD_VALUES := $(shell azd env get-values --output json | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]')
-$(foreach kv,$(AZD_VALUES),$(eval export $(kv)))
+	AZD_ENV_JSON := $(shell azd env get-values --output json 2>/dev/null || true)
+	ifneq ($(strip $(AZD_ENV_JSON)),)
+		AZD_VALUES := $(shell printf '%s\n' '$(AZD_ENV_JSON)' | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]')
+		$(foreach kv,$(AZD_VALUES),$(eval export $(kv)))
+	endif
 endif
 
 # Default target
