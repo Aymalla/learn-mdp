@@ -9,7 +9,7 @@ param location string = resourceGroup().location
 param devCenterProjectResourceId string
 
 @description('The subnet resource ID for the pool')
-param subnetId string
+param subnetId string?
 
 @description('The maximum number of agents in the pool')
 @minValue(1)
