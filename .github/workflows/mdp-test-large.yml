@@ -2,6 +2,9 @@ name: mdp-test-large-workflow
 on:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   MASTER_GNB_UPLANE_L2-PS_BUILD_fuse_sm6-snowfish-dyn1:
