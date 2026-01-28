@@ -40,8 +40,7 @@ The infrastructure setup includes:
 - **Managed DevOps Pool**: Scalable pool of build agents for CI/CD pipelines
 
 ```bash
-
-# Azue Login
+# Azure Login
 az login
 
 # Initialize azd (first time only)
@@ -49,7 +48,6 @@ azd init
 
 # Set required environment variables
 azd env set AZURE_LOCATION "swedencentral"
-
 azd env set AZURE_ENV_NAME "<unique-env-name>"
 azd env set GITHUB_ORG_URL "<your-org-url>"
 azd env set GITHUB_REPOSITORY_NAME "<your-repo-name>"
@@ -61,18 +59,37 @@ azd env set DEVOPSINFRASTRUCTURE_PRINCIPLE_ID "$principal_id"
 azd up
 ```
 
-### Trigger the GitHub Workflows
+### GH CLI Authentication
 
 ```bash
-
 gh auth login
-
-# Trigger two batches of MDP test workflows in parallel (each batch triggers 100 workflows runs)
-make trigger-workflow-batch & make trigger-workflow-batch
-
 ```
 
-> After each batch completes, check the workflow runs in your GitHub repository to observe the behavior of the MDP agents. you should see some agents getting stuck in the "Allocated" state.
+### Reproducing the Agent Stuck in "Allocated" State
+
+This issue occurs when MDP agents get stuck in the “Allocated” state during high workloads, which leads to pool saturation and makes agents unavailable for new jobs. To reproduce this behavior, run the following command to trigger high volume of workflow runs that use the MDP self‑hosted runners:
+
+```bash
+make reproduce-agent-stuck
+```
+
+- __How it works:__ This command triggers two batches of 100 workflow runs each, running concurrently to simulate high load on the MDP pool.
+- __Suspected Cause:__ High concurrency levels in MDP workflow runs, specifically related to resource allocation and cleanup.
+- __Results__: After each batch completes, check the workflow runs in your GitHub repository. You should see that all the workflow runs are completed and some agents are stuck in the “Allocated” state. if you did not observe the issue, rerun the command to trigger more workflow runs.
+- __Used Workflow:__ The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test.yml`](.github/workflows/mdp-test.yml).
+
+### Reproducing the Job Stuck in "Queued" State
+
+This issue occurs when jobs remain stuck in the “Queued and waiting for agent to pick it up” state, causing them to never progress. To reproduce this behavior, run the following command to trigger multiple workflow runs that use the MDP self‑hosted runners:
+
+```bash
+make reproduce-job-stuck
+```
+
+- __How it works:__ This command triggers a batch of 2 workflow runs that attempt to use the MDP self-hosted runners and are in the same concurrency group.
+- __Suspected Cause:__ Something related to the workflow concurrency group and MDP agent assignment.
+- __Results__: After the batch completes, check the workflow runs in your GitHub repository. You should see that one run has been canceled while the other is stuck in the queued state. If you do not observe the issue, rerun the command to trigger additional workflow runs.
+- __Used Workflow:__ The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test-job-stuck.yml`](.github/workflows/mdp-test-job-stuck.yml).
 
 ## Deployment Customization
 
@@ -80,7 +97,7 @@ Change the parameters in `main.parameters.json` to specify the desired Azure reg
 
 - **Supported Azure Regions:** Available regions for resource type 'Microsoft.DevCenter/devcenters': [`australiaeast`, `brazilsouth`, `canadacentral`, `centralus`, `francecentral`, `polandcentral`, `spaincentral`, `uaenorth`, `westeurope`, `germanywestcentral`, `italynorth`, `japaneast`, `japanwest`, `uksouth`, `eastus`, `eastus2`, `southafricanorth`, `southcentralus`, `southeastasia`, `switzerlandnorth`, `swedencentral`, `westus2`, `westus3`, `centralindia`, `eastasia`, `northeurope`, `koreacentral`], default is `swedencentral`.
 - **Supported images:** [`windows-2019`, `windows-2022`, `windows-2025`, `ubuntu-20.04`, `ubuntu-22.04`, `ubuntu-24.04`], default is `ubuntu-24.04`.
-- **VM Size:** based on the availabe quota in your subscription for MDP (the default is `Standard_D4ads_v5`).
+- **VM Size:** based on the available quota in your subscription for MDP (the default is `Standard_D4ads_v5`).
 - **Network Configuration**: To use a custom VNet address space, modify these parameters: `vnetAddressPrefix`: Virtual network CIDR (default: 10.0.0.0/16), `subnetAddressPrefix`: Subnet CIDR (default: 10.0.0.0/24)
 
 ## Documentation
