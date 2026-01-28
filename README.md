@@ -2,8 +2,6 @@
 
 This repository contains infrastructure as code (IaC) to deploy an Azure Managed DevOps Pools (MDP) environment and integrate a GitHub repository’s Actions to use it. The setup replicates the issue of self-hosted runners getting stuck in the “Allocated” state and is intended for troubleshooting and testing purposes.
 
-Based on my investigation, the issue appears to be caused by high concurrency levels in MDP, specifically related to resource allocation and disposal.
-
 ### Prerequisites
 
 - An Azure subscription
@@ -73,10 +71,10 @@ This issue occurs when MDP agents get stuck in the “Allocated” state during 
 make reproduce-agent-stuck
 ```
 
-- __How it works:__ This command triggers two batches of 100 workflow runs each, running concurrently to simulate high load on the MDP pool.
-- __Suspected Cause:__ High concurrency levels in MDP workflow runs, specifically related to resource allocation and cleanup.
-- __Results__: After each batch completes, check the workflow runs in your GitHub repository. You should see that all the workflow runs are completed and some agents are stuck in the “Allocated” state. if you did not observe the issue, rerun the command to trigger more workflow runs.
-- __Used Workflow:__ The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test.yml`](.github/workflows/mdp-test.yml).
+- **How it works:** This command triggers two batches of 100 workflow runs each, running concurrently to simulate high load on the MDP pool.
+- **Suspected Cause:** High concurrency levels in MDP workflow runs, specifically related to resource allocation and cleanup.
+- **Results**: After each batch completes, check the workflow runs in your GitHub repository. You should see that all the workflow runs are completed and some agents are stuck in the “Allocated” state. if you did not observe the issue, rerun the command to trigger more workflow runs.
+- **Used Workflow:** The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test.yml`](.github/workflows/mdp-test.yml).
 
 ### Reproducing the Job Stuck in "Queued" State
 
@@ -86,10 +84,10 @@ This issue occurs when jobs remain stuck in the “Queued and waiting for agent 
 make reproduce-job-stuck
 ```
 
-- __How it works:__ This command triggers a batch of 2 workflow runs that attempt to use the MDP self-hosted runners and are in the same concurrency group.
-- __Suspected Cause:__ Something related to the workflow concurrency group and MDP agent assignment.
-- __Results__: After the batch completes, check the workflow runs in your GitHub repository. You should see that one run has been canceled while the other is stuck in the queued state. If you do not observe the issue, rerun the command to trigger additional workflow runs.
-- __Used Workflow:__ The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test-job-stuck.yml`](.github/workflows/mdp-test-job-stuck.yml).
+- **How it works:** This command triggers a batch of 2 workflow runs that attempt to use the MDP self-hosted runners and are in the same concurrency group.
+- **Suspected Cause:** Something related to the workflow concurrency group and MDP agent assignment.
+- **Results**: After the batch completes, check the workflow runs in your GitHub repository. You should see that one run has been canceled while the other is stuck in the queued state. If you do not observe the issue, rerun the command to trigger additional workflow runs.
+- **Used Workflow:** The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test-job-stuck.yml`](.github/workflows/mdp-test-job-stuck.yml).
 
 ## Deployment Customization
 
