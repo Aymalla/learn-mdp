@@ -49,6 +49,9 @@ az login
 # Initialize azd (first time only)
 azd init
 
+# GH CLI Authentication
+gh auth login
+
 # Set required environment variables
 azd env set AZURE_LOCATION "swedencentral"
 azd env set AZURE_ENV_NAME "<unique-env-name>"
@@ -60,12 +63,6 @@ azd env set DEVOPSINFRASTRUCTURE_PRINCIPLE_ID "$principal_id"
 
 # Provision and deploy infrastructure
 azd up
-```
-
-### GH CLI Authentication
-
-```bash
-gh auth login
 ```
 
 ### Reproducing the Agent Stuck in "Allocated" State
