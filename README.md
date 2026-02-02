@@ -1,6 +1,11 @@
-# MDP - Azure Managed DevOps Pools Agents Stuck Case Replication
+# MDP - Azure Managed DevOps Pools Stuck Cases Replication
 
-This repository contains infrastructure as code (IaC) to deploy an Azure Managed DevOps Pools (MDP) environment and integrate a GitHub repository’s Actions to use it. The setup replicates the issue of self-hosted runners getting stuck in the “Allocated” state and is intended for troubleshooting and testing purposes.
+This repository provides infrastructure‑as‑code (IaC) to deploy an Azure Managed DevOps Pools (MDP) environment and integrate a GitHub repository’s Actions workflows with it.
+The setup is used to reproduce issues where MDP is not behaving as expected, and is intended specifically for troubleshooting and testing.
+
+### Issues Being Replicated
+- Agents remain stuck in the “Allocated” state
+- the jobs getting stuck in "Queued" State
 
 ### Prerequisites
 
