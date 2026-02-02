@@ -46,11 +46,11 @@ The infrastructure setup includes:
 # Azure Login
 az login
 
-# Initialize azd (first time only)
-azd init
-
 # GH CLI Authentication
 gh auth login
+
+# Initialize azd (first time only)
+azd init
 
 # Set required environment variables
 azd env set AZURE_LOCATION "swedencentral"
