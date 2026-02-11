@@ -3,18 +3,19 @@
 This repository provides infrastructure‑as‑code (IaC) to deploy an Azure Managed DevOps Pools (MDP) environment and integrate a GitHub repository’s Actions workflows with it.
 The setup is used to reproduce issues where MDP is not behaving as expected, and is intended specifically for troubleshooting and testing.
 
-### Issues Being Replicated
+## Issues Being Replicated
+
 - Agents remain stuck in the “Allocated” state
 - the jobs getting stuck in "Queued" State
 
-### Prerequisites
+## Prerequisites
 
 - An Azure subscription
 - Azure Managed DevOps Pools subscription prerequisites (see [Azure Managed DevOps Pools documentation](https://learn.microsoft.com/en-us/azure/devops/managed-devops-pools/prerequisites?view=azure-devops&tabs=azure-portal))
 - GitHub organization with `Managed DevOps Pools application` installed
 - Fork of this repository in your GitHub organization
 
-#### Tools
+### Tools
 
 - Azure Developer CLI (azd)
 - GitHub CLI (gh)
@@ -73,10 +74,12 @@ This issue occurs when MDP agents get stuck in the “Allocated” state during 
 make reproduce-agent-stuck
 ```
 
-- **How it works:** This command triggers two batches of 100 workflow runs each, running concurrently to simulate high load on the MDP pool.
+- **Workflow setup:** The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test.yml`](.github/workflows/mdp-test.yml).
+- **Scenario:** This command triggers two batches of 100 workflow runs each, running concurrently to simulate high load on the MDP pool.
+- **Expected result:** All workflow runs complete successfully, and no agents remain stuck in the “Allocated” state.
+- **Actual result:** After the first batch of workflow runs completes, some agents remain stuck in the “Allocated” state, causing subsequent workflow runs to fail due to lack of available agents.
 - **Suspected Cause:** High concurrency levels in MDP workflow runs, specifically related to resource allocation and cleanup.
-- **Results**: After each batch completes, check the workflow runs in your GitHub repository. You should see that all the workflow runs are completed and some agents are stuck in the “Allocated” state. if you did not observe the issue, rerun the command to trigger more workflow runs.
-- **Used Workflow:** The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test.yml`](.github/workflows/mdp-test.yml).
+- **Observations**: After each batch completes, check the workflow runs in your GitHub repository. You should see that all the workflow runs are completed and some agents are stuck in the “Allocated” state. if you did not observe the issue, rerun the command to trigger more workflow runs.
 
 ### Reproducing the Job Stuck in "Queued" State
 
@@ -86,10 +89,16 @@ This issue occurs when jobs remain stuck in the “Queued and waiting for agent 
 make reproduce-job-stuck
 ```
 
-- **How it works:** This command triggers a batch of 2 workflow runs that attempt to use the MDP self-hosted runners and are in the same concurrency group.
+- **Workflow setup:** A workflow with one job and one step. A concurrency group is configured the workflow is defined in [`.github/workflows/mdp-test-job-stuck.yml`](.github/workflows/mdp-test-job-stuck.yml).
+- **Scenario:** Trigger a batch of two or more workflow runs using the GitHub CLI (gh).
+- **Expected result:** One run completes successfully, while the others are cancelled.
+- **Actual result:** One run remains stuck in the “queued” state, and the others are cancelled.
 - **Suspected Cause:** Something related to the workflow concurrency group and MDP agent assignment.
-- **Results**: After the batch completes, check the workflow runs in your GitHub repository. You should see that one run has been canceled while the other is stuck in the queued state. If you do not observe the issue, rerun the command to trigger additional workflow runs.
-- **Used Workflow:** The workflow used to reproduce this issue is defined in [`.github/workflows/mdp-test-job-stuck.yml`](.github/workflows/mdp-test-job-stuck.yml).
+- **Observations:**
+  - If concurrency is not configured, everything works as expected.
+  - If I trigger the same workflow using GitHub‑hosted runners, it works as expected.
+  - Sometimes I need to repeat the scenario a few times before a job gets stuck.
+    Sometimes the job stays queued indefinitely; other times it starts after several minutes (e.g. 5+).
 
 ## Deployment Customization
 
